@@ -1,0 +1,19 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400;1,600;1,700;1,800;1,900&display=swap');
+
+.Store {
+
+
+
+  .main-store {
+    background-color: rgba(35,28,35,.95);
+    box-shadow: 0 0 17px #dcadff;
+
+    .title {
+      font-family: museosans, serif;
+      padding: 20px;
+      letter-spacing: 10px;
+      color: rgba(255,255,255,.89);
+      text-shadow: 3px 1px 5px rgba(0, 0, 0, 69);
+    }
+  }
+}
