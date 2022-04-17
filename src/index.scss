@@ -1,1 +1,24 @@
 
+.btn {
+  width: 100%;
+  border-radius: 0 !important;
+  font-family: cinzel, serif;
+  height: 50px;
+  letter-spacing: 1px;
+  font-size: 13px;
+  text-shadow: 0 0 5px rgba(0, 0, 0, 0.82);
+  margin-top: 1em;
+
+  &:hover {
+    filter: brightness(150%) !important;
+  }
+}
+
+.btn-success {
+  border: 2px solid #2a3f29;
+  box-shadow: 0 0 10px #1a500a5c;
+}
+.btn-info {
+  border: 2px solid #304d55;
+  box-shadow: 0 0 10px #0a4f505c;
+}

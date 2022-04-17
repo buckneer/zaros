@@ -8,9 +8,11 @@ import Store from "./pages/store/Store";
 
 const styles : CSS.Properties = {
     backgroundImage: `url(${background})`,
-    backgroundSize: "cover",
+
     backgroundColor: "#231C23",
-    minHeight: "1000px"
+    minHeight: "1000px",
+    backgroundRepeat: 'no-repeat',
+    backgroundPosition: 'top center'
 }
 
 function App() {
