@@ -1,6 +1,7 @@
 import "./Navigation.scss";
 import logo from "../../assets/main/logo.png"
 import linkImg from "../../assets/main/nav-item.png";
+import {NavLink} from "react-router-dom";
 
 export default function Navigation() {
     return (
@@ -31,17 +32,17 @@ export default function Navigation() {
                             <img className="py-2" src={linkImg} alt="item" />
                         </li>
                         <li className="nav-item ms-5">
-                            <a className="nav-link" href="#">PLAY NOW</a>
+                            <NavLink to="/" className="nav-link">PLAY NOW</NavLink>
                         </li>
                     </ul>
                 </div>
                 <div className="navbar-brand d-none d-sm-block">
-                    <img src={logo} alt="logo" height="80px" width="180px" />
+                    <img src={logo} alt="logo" height="150px" width="250px" />
                 </div>
                 <div className="collapse navbar-collapse" id="navbarNav">
                     <ul className="navbar-nav">
                         <li className="nav-item ms-5">
-                            <a className="nav-link active" aria-current="page" href="#">STORE</a>
+                            <NavLink to="/store" className="nav-link" aria-current="page">STORE</NavLink>
                         </li>
                         <li className="ms-5 d-sm-block d-none">
                             <img className="py-2" src={linkImg} alt="item" />

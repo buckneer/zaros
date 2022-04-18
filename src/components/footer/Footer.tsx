@@ -1,17 +1,6 @@
 import "./Footer.scss";
-import footerBg from "../../assets/main/footer-bg.jpeg";
-import CSS from 'csstype';
 import logo from "../../assets/main/logo.png";
 
-
-const styles : CSS.Properties = {
-    backgroundImage: `url(${footerBg})`,
-    backgroundSize: "cover",
-    backgroundRepeat: "no-repeat",
-    zIndex: "-2",
-    backgroundPosition: "top",
-    minHeight: "200px"
-}
 
 
 export default function Footer() {

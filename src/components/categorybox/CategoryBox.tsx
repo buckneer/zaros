@@ -1,14 +1,15 @@
 
 import "./CategoryBox.scss";
-import {MouseEventHandler} from "react";
+import {EventHandler, MouseEventHandler} from "react";
+import {CategoryType} from "../../services/item/category.type";
 
 
 
-export default function CategoryBox({title, icon, handleFilter}: {title: string, icon: string, handleFilter: MouseEventHandler}) {
+export default function CategoryBox({category, handleFilter}: {category: CategoryType, handleFilter: EventHandler<any>}) {
     return (
-        <button onClick={e => handleFilter(e)} className="CategoryBox ms-2 col-1 mt-2" value={title} >
-            <img className="ms-2 mt-2" src={icon}  alt="weapon"/>
-            <h2 className="my-3 p-0">{title.toUpperCase()}</h2>
+        <button onClick={() => handleFilter(category.name)} className="CategoryBox ms-2 col-1 mt-2" >
+            <img className="ms-2 mt-2" src={category.icon}  alt="weapon"/>
+            <h2 className="my-3 p-0">{category.name.toUpperCase()}</h2>
         </button>
     )
 }

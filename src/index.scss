@@ -22,3 +22,38 @@
   border: 2px solid #304d55;
   box-shadow: 0 0 10px #0a4f505c;
 }
+
+input {
+  background-color: #1d181d;
+  outline: none;
+  color: #FFF;
+  height: 2.1rem;
+  width: 100%;
+  font-size: .8rem;
+  box-sizing: content-box;
+  padding-left: 10px;
+  margin-top: 5px;
+  border: 1px solid #352c35;
+  transition: box-shadow .3s,border .3s,-webkit-box-shadow .3s;
+
+  &:focus {
+    border-bottom: 1px solid #a295ae;
+    box-shadow: 0 1px 0 0 #decbae;
+  }
+}
+
+
+.vote-btn {
+  background-color: #8267be !important;
+  color: #0a0003 !important;
+  text-shadow: none;
+  font-size: 16px !important;
+  font-family: BlinkMacSystemFont,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif!important;
+}
+
+
+.regular-text {
+  font-size: 14px;
+  font-family: BlinkMacSystemFont,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif!important;
+  color: #d3d3d3;
+}

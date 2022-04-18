@@ -44,11 +44,14 @@ export default function Store() {
 
 
     const [filteredItems, setFilteredItems] = useState<ItemType[] | null>(null);
+    const [searchString, setSearchString] = useState("");
 
+    let handleFilter = (filter: string) => {
+        setFilteredItems(filterItems(filter));
+    }
 
-    let handleFilter = (e: any) => {
-        let itemCat = e.target.value;
-        setFilteredItems(filterItems(itemCat));
+    let handleSearch = (e: any) => {
+        setSearchString(e.target.value)
     }
 
     useEffect(() => {
@@ -74,14 +77,16 @@ export default function Store() {
                         <div className="container mx-auto row pb-5 justify-content-center">
 
                             {categories.map(category => (
-                                <CategoryBox handleFilter={handleFilter} title={category.name} icon={category.icon} />
+                                <CategoryBox key={category.name} category={category} handleFilter={handleFilter} />
                             ))}
 
                         </div>
 
                         <div className="row filters">
                             <div className="col-12 col-md-6 col-lg-3">
-                                <input type="text" placeholder="Search for an item"/>
+                                <input type="text" placeholder="Search for an item"
+                                       onChange={e => handleSearch(e)}
+                                value={searchString}/>
                             </div>
                             <div className="col-12 col-md-6 col-lg-3">
                                 <select className="form-select" aria-label="Default select example">
@@ -99,7 +104,7 @@ export default function Store() {
 
                         <div className="row items justify-content-between">
                             {filteredItems && filteredItems.map(item => (
-                                <ItemBox title={item.name} price={item.price} icon={item.icon} />
+                                <ItemBox title={item.name} price={item.price} icon={item.icon} key={item.name} />
                             ))}
 
                         </div>
