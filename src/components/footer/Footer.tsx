@@ -16,7 +16,7 @@ const styles : CSS.Properties = {
 
 export default function Footer() {
     return (
-        <div className="Footer mt-5" style={styles}>
+        <div className="Footer mt-5" style={{background: "#240806"}}>
 
             <section className="p-3">
                 <div className="container text-center text-md-start mt-5">
@@ -34,7 +34,7 @@ export default function Footer() {
                         </div>
 
                         <div className="col-md-2 col-lg-2 col-xl-2 mx-auto mb-4 text-white">
-                            <h2 className="text-uppercase fw-bold mb-4 text-primary">
+                            <h2 className="text-uppercase fw-bold mb-4 text-primary ">
                                 Demo
                             </h2>
                             <ul>
@@ -97,7 +97,7 @@ export default function Footer() {
             <div className="text-center p-4 text-white">
                 <div className="row justify-content-center">
                     <div className="col-6">
-                        Copyright © 2020-2022 Zaros. | All rights reserved.
+                        Copyright ©2022 Vulcan. | All rights reserved.
                     </div>
                     <div className="col-6">
                         <a href="#">Terms of Service</a> | <a href="#">Privacy Policy</a>
