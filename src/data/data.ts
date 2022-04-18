@@ -3,7 +3,7 @@ import {CategoryType} from "../services/item/category.type";
 
 
 
-let categories : CategoryType[] = [
+export let categories : CategoryType[] = [
     {
         name: "weaponry",
         icon: "https://i.ibb.co/QXfHkVh/armadyl-godsword.png"
@@ -29,7 +29,7 @@ let categories : CategoryType[] = [
         icon: "https://i.ibb.co/zrR4hNJ/mystery-box.png"
     },
     {
-        name: "cosmetic",
+        name: "cosmetics",
         icon: "https://i.ibb.co/dGrVpYZ/interted-santahat.png"
     },
 ]
