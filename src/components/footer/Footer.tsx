@@ -5,7 +5,7 @@ import logo from "../../assets/main/logo.png";
 
 export default function Footer() {
     return (
-        <div className="Footer mt-5" style={{background: "#240806"}}>
+        <div className="Footer mt-5">
 
             <section className="p-3">
                 <div className="container text-center text-md-start mt-5">
