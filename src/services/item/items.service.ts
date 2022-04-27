@@ -1,10 +1,16 @@
-import {items} from "../../data/data";
+
+import axios from "axios";
+
+const BASE_URL = process.env.REACT_APP_URL as string
 
 
-export function getAllItems() {
-    return items;
+
+export async function getAllItems() {
+    return axios.get(BASE_URL + "items")
 }
 
-export function filterItems(category: string) {
-    return getAllItems().filter(item => item.category === category);
-}
+
+
+
+
+

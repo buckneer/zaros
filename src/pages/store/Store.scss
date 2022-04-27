@@ -79,4 +79,12 @@
     }
   }
 
+
+  .delete-item {
+    cursor: pointer;
+    &:hover {
+      color: #FFF !important;
+    }
+  }
+
 }

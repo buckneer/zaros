@@ -5,6 +5,10 @@ import {CategoryType} from "../services/item/category.type";
 
 export let categories : CategoryType[] = [
     {
+      name: "tokens",
+      icon: "https://i.ibb.co/1GGTsfT/coins.png"
+    },
+    {
         name: "weaponry",
         icon: "https://i.ibb.co/QXfHkVh/armadyl-godsword.png"
     },

@@ -8,6 +8,7 @@ import Store from "./pages/store/Store";
 import {BrowserRouter, Routes, Route} from "react-router-dom";
 import PlayNow from "./pages/playnow/PlayNow";
 import Scores from "./pages/scores/Scores";
+import Login from "./pages/login/Login";
 
 const styles : CSS.Properties = {
     backgroundImage: `url(${background})`,
@@ -26,6 +27,7 @@ function App() {
                 <Route path="/play-now" element={<PlayNow />} />
                 <Route path="/store" element={<Store />} />
                 <Route path="/hiscores" element={<Scores />} />
+                <Route path="/login" element={<Login />} />
             </Routes>
             <Footer />
         </BrowserRouter>

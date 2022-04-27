@@ -4,32 +4,176 @@ import "./Store.scss";
 import CategoryBox from "../../components/categorybox/CategoryBox";
 import {CategoryType} from "../../services/item/category.type";
 import ItemBox from "../../components/itembox/ItemBox";
-import {useEffect, useState} from "react";
-import {ItemType} from "../../services/item/item.type";
-import {filterItems} from "../../services/item/items.service";
+import {useContext, useEffect, useState} from "react";
+import {getAllItems} from "../../services/item/items.service";
 import coins from "../../assets/main/coins.png";
 import {getCategories} from "../../services/item/category.service";
+import {AuthContext} from "../../context/AuthProvider";
+import {getUser, logout} from "../../services/user/user.service";
+import {useNavigate} from "react-router-dom";
+import {Item} from "../../@types/item";
+import {User} from "../../@types/user";
+import {Cart} from "../../@types/cart";
+import {doCheckout, getCart, removeItem} from "../../services/cart/cart.service";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {faClose} from "@fortawesome/free-solid-svg-icons";
+import {toast, ToastContainer} from "react-toastify";
+import CustomModal from "../../components/CustomModal";
 
 
 export default function Store() {
 
 
-    const [filteredItems, setFilteredItems] = useState<ItemType[] | null>(null);
+    const [filteredItems, setFilteredItems] = useState<Item[] | null>(null);
     const [categories, setCategories] = useState<CategoryType[]>([]);
     const [searchString, setSearchString] = useState("");
+    const {user, login, logout : logoutContext} = useContext(AuthContext);
+    const [cart, setCart] = useState<Cart | null>(null);
+    const [total, setTotal] = useState<number>(0);
+    const [notEnough, setNotEnough] = useState(false);
+    const [show, setShow] = useState(false);
+
+
+    const toggleModal = () => {
+        setShow(prevState => {return !prevState})
+    }
+
+
+    const navigate = useNavigate();
+    const [loggedIn, setLoggedIn] = useState(false);
+
+
+
+    let updateCart = () => {
+        getCart().then(response => {
+
+            if(response.headers['x-access-token']) {
+                localStorage.removeItem("authAccess");
+                localStorage.setItem('authAccess', response.headers['x-access-token'])
+            }
+
+            let newCart = response.data as Cart;
+
+            let prices: number[] = []
+
+            newCart.items.map(item => {
+                prices.push(parseInt(item.price))
+            })
+
+            setTotal(prices.reduce((a, b) => a+b, 0))
+
+            setCart(newCart)
+        })
+    }
+
+    // HANDLERS
 
     let handleFilter = (filter: string) => {
-        setFilteredItems(filterItems(filter));
+        getAllItems().then(response => {
+            let items = response.data as Item[]
+            setFilteredItems(items.filter(item => {
+                return item.category === filter
+            }))
+        })
     }
+
 
     let handleSearch = (e: any) => {
         setSearchString(e.target.value)
     }
 
+    let handleLogout = (e: any) => {
+        e.preventDefault();
+
+        logout().then(response => {
+            localStorage.removeItem("authAccess");
+            localStorage.removeItem("authRefresh");
+
+            logoutContext();
+
+            navigate("/login")
+
+        })
+    }
+
+
+    let handleDelete = (_id: string) => {
+
+
+        removeItem(_id).then(response => {
+            toast.success("Item Removed");
+            updateCart()
+        }).catch(error => {
+            toast.error("Internal Server Error")
+        })
+    }
+
+    let handleCheckout = (e: any) => {
+        e.preventDefault();
+
+        doCheckout().then(response => {
+            if(response.data.message) {
+                // toast.error(response.data.message);
+                toggleModal();
+            } else {
+                login(response.data as User);
+                toast.success("Checkout done")
+            }
+            updateCart();
+        }).catch(error => {
+            toast.error("An error occurred");
+        })
+    }
+
+    // EFFECTS
+
+    // Update the data
     useEffect(() => {
+
+
+        if(!localStorage.getItem("authRefresh")) {
+            navigate("/login");
+        }
+
         setCategories(getCategories());
-        setFilteredItems(filterItems('weaponry'));
+
+        getAllItems().then(response => {
+            let items = response.data as Item[]
+            setFilteredItems(items.filter(item => {
+                return item.category === "weaponry"
+            }))
+        })
     }, []);
+
+    // Update the view
+    useEffect(() => {
+
+
+        if(localStorage.getItem("authRefresh")) {
+
+
+            updateCart();
+
+            getUser(localStorage.getItem("authAccess") as string
+                ,localStorage.getItem("authRefresh") as string).then(response => {
+                if(response.headers['x-access-token']) {
+                    localStorage.removeItem("authAccess");
+                    localStorage.setItem('authAccess', response.headers['x-access-token'])
+                }
+
+                if(!user) {
+                    login(response.data as User)
+                }
+            })
+
+
+
+
+            setLoggedIn(true)
+        } else {
+            setLoggedIn(false)
+        }
+    }, [localStorage.getItem("authRefresh")]);
 
 
     return (
@@ -77,7 +221,7 @@ export default function Store() {
 
                         <div className="row items justify-content-between">
                             {filteredItems && filteredItems.map(item => (
-                                <ItemBox title={item.name} price={item.price} icon={item.icon} key={item.name} />
+                                <ItemBox item={item} updateCart={updateCart} key={item.name} />
                             ))}
 
                         </div>
@@ -96,9 +240,16 @@ export default function Store() {
                                     <tbody>
                                         <tr>
                                             <td style={{textAlign: "left", fontSize: "0.9rem"}}>
-                                                <h2 className="cart-user">
-                                                    You are buying as: ...
-                                                </h2>
+                                                {!loggedIn && <h2 className="cart-user">You are not logged in</h2>}
+                                                {loggedIn && (
+                                                    <>
+                                                        <h2 className="cart-user">
+                                                            You are buying as: <b>{user?.name}</b>
+                                                        </h2>
+                                                        <h2 className="cart-user text-end" style={{cursor: "pointer"}} onClick={e => handleLogout(e)}>Log out</h2>
+                                                    </>
+                                                )}
+
                                             </td>
                                             <td style={{textAlign: "left", fontSize: "0.9rem"}}>
                                             </td>
@@ -113,13 +264,32 @@ export default function Store() {
                                             </td>
                                             <td style={{textAlign: "left", fontSize: "0.9rem"}}>
                                                 <h2 className="cart-title">
-                                                    You have: &nbsp; &nbsp;
+                                                    You have: &nbsp;
                                                     <span style={{color: "#ffcb90"}}>
-                                                        0 Tokens
+                                                        {user?.zeahCoins} Tokens
                                                     </span>
                                                 </h2>
                                             </td>
                                         </tr>
+
+                                        {cart?.items && cart?.items.map(item => (
+                                            <tr key={item._id}>
+                                                <td style={{textAlign: "left", fontSize: "0.9rem"}}>
+                                                    <h2 className="cart-title" style={{color: "#eed7ff"}}>
+                                                        {item.name}
+                                                    </h2>
+                                                </td>
+                                                <td>
+                                                    <h2 className="cart-title" style={{color: "#ffcb90"}}>
+                                                        {item.price} Tokens
+                                                    </h2>
+                                                </td>
+                                                <td className="delete-item">
+                                                    <FontAwesomeIcon icon={faClose} onClick={() => handleDelete(item._id)}/>
+                                                </td>
+                                            </tr>
+                                        ))}
+
                                     </tbody>
                                 </table>
 
@@ -127,10 +297,12 @@ export default function Store() {
 
                                 <h4 style={{fontSize: "1rem"}}>
                                     Total: <span className="basket-total"
-                                                 style={{color: "#ffcb90", fontSize: "1.1rem", fontWeight: "600"}}>0 Tokens</span>
+                                                 style={{color: "#ffcb90", fontSize: "1.1rem", fontWeight: "600"}}>
+                                    {total}
+                                </span>
                                 </h4>
 
-                                <button className="btn btn-info">Checkout</button>
+                                <button className="btn btn-info" onClick={(e) => handleCheckout(e)}>Checkout</button>
                             </div>
                         </div>
                     </div>
@@ -138,6 +310,8 @@ export default function Store() {
 
 
             </div>
+            <CustomModal message={"Not enough coins"} show={show} closeModal={toggleModal} />
+            <ToastContainer autoClose={2000} />
         </div>
     )
 }
