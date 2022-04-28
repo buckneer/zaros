@@ -7,6 +7,7 @@ export interface User {
     name: string,
     email: string,
     zeahCoins: string,
+    role: string,
     items: Item[]
 }
 

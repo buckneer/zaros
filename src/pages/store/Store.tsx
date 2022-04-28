@@ -19,6 +19,7 @@ import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faClose} from "@fortawesome/free-solid-svg-icons";
 import {toast, ToastContainer} from "react-toastify";
 import CustomModal from "../../components/CustomModal";
+import AddItemModal from "../../components/AddItemModal";
 
 
 export default function Store() {
@@ -30,12 +31,16 @@ export default function Store() {
     const {user, login, logout : logoutContext} = useContext(AuthContext);
     const [cart, setCart] = useState<Cart | null>(null);
     const [total, setTotal] = useState<number>(0);
-    const [notEnough, setNotEnough] = useState(false);
     const [show, setShow] = useState(false);
+    const [addItem, setAddItem] = useState(false);
 
 
     const toggleModal = () => {
         setShow(prevState => {return !prevState})
+    }
+
+    const toggleAddItem = () => {
+        setAddItem(prevState => {return !prevState});
     }
 
 
@@ -223,8 +228,13 @@ export default function Store() {
                             {filteredItems && filteredItems.map(item => (
                                 <ItemBox item={item} updateCart={updateCart} key={item.name} />
                             ))}
-
                         </div>
+                        {user?.role === "admin" && (
+                            <div className="add-items text-center my-5">
+                                <button className="btn btn-success w-50 mx-auto" onClick={toggleAddItem}>Add item</button>
+                            </div>
+                        )}
+
                     </div>
 
                     <div className="sidebar col-md-3 col-12">
@@ -311,6 +321,7 @@ export default function Store() {
 
             </div>
             <CustomModal message={"Not enough coins"} show={show} closeModal={toggleModal} />
+            <AddItemModal show={addItem} closeModal={toggleAddItem} categories={categories} />
             <ToastContainer autoClose={2000} />
         </div>
     )

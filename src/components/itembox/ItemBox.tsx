@@ -2,14 +2,18 @@ import "./ItemBox.scss";
 import {Item} from "../../@types/item";
 import {addToCart} from "../../services/cart/cart.service";
 import {toast} from "react-toastify";
-import {useState} from "react";
+import {useContext, useState} from "react";
 import CheckoutModal from "../CheckoutModal";
-
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {faTrash} from "@fortawesome/free-solid-svg-icons";
+import {AuthContext} from "../../context/AuthProvider";
+import {deleteItem} from "../../services/item/items.service";
 
 
 export default function ItemBox({item, updateCart}: {item: Item,updateCart: () => void}) {
 
     const [show, setShow] = useState(false);
+    const {user, logout, login} = useContext(AuthContext);
 
     const toggleModal = () => {
         setShow(prevState => {return !prevState})
@@ -24,6 +28,18 @@ export default function ItemBox({item, updateCart}: {item: Item,updateCart: () =
         })
     }
 
+    let handleDelete = () => {
+        deleteItem(item._id).then(response => {
+            if(response.data.message) {
+                toast.error("Couldn't delete item")
+            } else {
+                toast.success("Item deleted")
+            }
+        }).catch(error => {
+            toast.error("Internal Server Error")
+            console.log(error);
+        })
+    }
 
     let handleBuy = () => {
         setShow(true);
@@ -60,12 +76,21 @@ export default function ItemBox({item, updateCart}: {item: Item,updateCart: () =
                                 )}
 
                                 <br />
-                                {item.category !== "tokens" && (
+                                {item.category !== "tokens" && user?.role !== "admin" && (
                                     <button className="btn btn-danger" onClick={e => handleCart(e)}>Add To Cart</button>
                                 )}
-                                {item.category === "tokens" && (
-                                    <button className="btn btn-danger" onClick={e => handleBuy()}>Buy Now</button>
+                                {item.category === "tokens" && user?.role !== "admin"  && (
+                                    <button className="btn btn-danger" onClick={e => handleBuy()}>
+                                       Buy Now
+                                    </button>
                                 )}
+                                {user?.role === "admin" && (
+                                    <button className="btn btn-danger" onClick={handleDelete}>
+                                        <FontAwesomeIcon icon={faTrash} onClick={handleDelete} />
+                                        &nbsp; Delete Item
+                                    </button>
+                                )}
+
 
                             </div>
                         </div>
