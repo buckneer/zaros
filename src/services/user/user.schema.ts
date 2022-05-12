@@ -9,5 +9,5 @@ export type RegisterSchema = {
     email: string,
     name: string,
     password: string,
-    confirmPassword: string,
+    passwordConfirmation: string,
 }

@@ -36,7 +36,7 @@ export default function PlayNow() {
             name: username,
             email: email,
             password,
-            confirmPassword
+            passwordConfirmation: confirmPassword
         }
 
 
